@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://kit.fontawesome.com/9c7fdc9e29.js" crossorigin="anonymous"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            width: 100vw;
+            background-image: linear-gradient(20deg, white 55%, red 55%);
+            background-color: #fff;
+        }
+        .container {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 20px;
+        }
+        .app {
+            background-color: rgb(232, 223, 223);
+            padding: 30px;
+            width: 500px;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            border: none;
+            border-radius: 5px;
+        }
+        .wrapper {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .fa-plus {
+            margin-right: 3px;
+        }
+        .button {
+            margin-left: 10px;
+            width: 60px;
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+            padding: 6px;
+            cursor: pointer;
+            background-color: rgb(22, 234, 22);
+        }
+        .input {
+            border: none;
+            padding: 6px;
+            border-radius: 5px;
+            flex-grow: 1;
+        }
+        .fa-solid {
+            cursor: pointer;
+            margin-left: 5px;
+        }
+        .fa-pen-to-square {
+            background-color: rgb(22, 221, 22);
+            border-radius: 4px;
+            padding: 4px;
+        }
+        .fa-trash {
+            background-color: red;
+            border-radius: 4px;
+            padding: 4px;
+        }
+        .task {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background-color: white;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        .task.completed span {
+            text-decoration: line-through;
+            color: grey;
+        }
+        .task .icons {
+            display: flex;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 style="text-align:center;color: rgb(2, 2, 12);margin-bottom:50px;font-size: 73px;font-family:'Times New Roman', Times, serif;">To Do List App</h1>
+        <div class="app">
+            <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                <i class="fa-solid fa-list-dropdown" style="color: #6736c1;"></i>
+                <h1 style="color: #fff; font-size: 22px; margin-left: 10px;">Tasks</h1>
+            </div>
+            <div class="wrapper">
+                <input type="text" class="input">
+                <button type="button" class="button"><i class="fa-solid fa-plus"></i>Add</button>
+            </div>
+            <div id="task">
+                <!-- Tasks will be added here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const addButton = document.querySelector('.button');
+            const inputField = document.querySelector('.input');
+            const taskContainer = document.getElementById('task');
+
+            addButton.addEventListener('click', addTask);
+            inputField.addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') {
+                    addTask();
+                }
+            });
+
+            function addTask() {
+                const taskText = inputField.value.trim();
+                if (taskText !== "") {
+                    const taskElement = document.createElement('div');
+                    taskElement.classList.add('task');
+
+                    const taskContent = document.createElement('span');
+                    taskContent.textContent = taskText;
+                    taskElement.appendChild(taskContent);
+
+                    const iconsContainer = document.createElement('div');
+                    iconsContainer.classList.add('icons');
+
+                    const completeIcon = document.createElement('i');
+                    completeIcon.classList.add('fa-solid', 'fa-check');
+                    completeIcon.addEventListener('click', () => toggleComplete(taskElement));
+                    iconsContainer.appendChild(completeIcon);
+
+                    const editIcon = document.createElement('i');
+                    editIcon.classList.add('fa-solid', 'fa-pen-to-square');
+                    editIcon.addEventListener('click', () => editTask(taskElement, taskContent));
+                    iconsContainer.appendChild(editIcon);
+
+                    const deleteIcon = document.createElement('i');
+                    deleteIcon.classList.add('fa-solid', 'fa-trash');
+                    deleteIcon.addEventListener('click', () => deleteTask(taskElement));
+                    iconsContainer.appendChild(deleteIcon);
+
+                    taskElement.appendChild(iconsContainer);
+                    taskContainer.appendChild(taskElement);
+                    inputField.value = "";
+                }
+            }
+
+            function toggleComplete(taskElement) {
+                taskElement.classList.toggle('completed');
+            }
+
+            function editTask(taskElement, taskContent) {
+                const newTaskText = prompt('Edit your task:', taskContent.textContent);
+                if (newTaskText !== null && newTaskText.trim() !== "") {
+                    taskContent.textContent = newTaskText;
+                }
+            }
+
+            function deleteTask(taskElement) {
+                taskContainer.removeChild(taskElement);
+            }
+        });
+    </script>
+</body>
+</html>
